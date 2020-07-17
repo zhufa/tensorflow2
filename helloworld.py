@@ -38,11 +38,11 @@ model1 = tf.keras.models.Sequential([
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.2),
   tf.keras.layers.Dense(10, activation='softmax')
-])
+], name='model1')
 
-# 模型结构搭建：tensorflow1.0时代的官方给出的网络结构
+# 模型结构搭建：tensorflow1.0时代官方给出的网络结构
 model2 = tf.keras.models.Sequential([
-    # 数据集里为60000张28×28的测试图片，Conv2D()需要4维的张量：(batch_size, rows, cols, channels)
+    # 数据集里为60000张28×28的测试图片，Conv2D()需要4维的张量：(batch_size, rows, cols, channels)，默认channels在后面，可更改
     # batch_size会在训练的时候自动加上，所以需要将原28×28的input转换为 28×28×1 的input，指明channels通道数为1
     tf.keras.layers.Reshape((28, 28, 1), input_shape=(28, 28)),  # 作为第一层，需要指明input_shape参数值
     tf.keras.layers.Conv2D(32, (5, 5), padding='same', activation='relu', bias_initializer=tf.keras.initializers.constant(0.1)),
@@ -53,7 +53,7 @@ model2 = tf.keras.models.Sequential([
     tf.keras.layers.Dense(1024, activation='relu', bias_initializer=tf.keras.initializers.constant(0.1)),
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(10, activation='softmax', bias_initializer=tf.keras.initializers.constant(0.1))
-])
+], name='model2')
 
 # 选择模型
 model = model1
@@ -68,5 +68,5 @@ model.compile(optimizer='adam',
 model.fit(x_train, y_train, batch_size=32, epochs=5)
 # 测试模型的损失值和指标值（此处指精度，因为metrics=['accuracy']）
 model.evaluate(x_test, y_test)
-
-model.save('./model/')
+# 两个模型分别保存
+model.save('./' + model.name + '/')
